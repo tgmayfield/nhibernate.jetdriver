@@ -18,7 +18,7 @@ namespace NHibernate.JetDriver.Tests.Entities
         public virtual ISet<Catalog> Catalogs
         {
             get; 
-            private set;
+            protected set;
         }
 
         public virtual string Name

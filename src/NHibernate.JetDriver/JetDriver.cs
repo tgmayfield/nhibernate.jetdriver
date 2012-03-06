@@ -3,8 +3,6 @@ using System.Data;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using log4net;
-
 using NHibernate.Driver;
 using NHibernate.SqlCommand;
 using NHibernate.SqlTypes;
@@ -19,7 +17,7 @@ namespace NHibernate.JetDriver
     /// </summary>
     public class JetDriver : OleDbDriver
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(JetDriver));
+        private static readonly IInternalLogger logger = LoggerProvider.LoggerFor(typeof(JetDriver));
 
         private const string FromClause = " from ";
         private const string WhereClause = " where ";

@@ -23,7 +23,7 @@ namespace NHibernate.JetDriver
     /// </summary>
     public sealed class JetDbCommand : DbCommand
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(typeof(JetDbCommand));
+        private static readonly IInternalLogger Log = LoggerProvider.LoggerFor(typeof(JetDbCommand));
 
         private JetDbConnection _connection;
         private JetDbTransaction _transaction;

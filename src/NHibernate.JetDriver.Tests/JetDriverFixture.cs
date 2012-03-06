@@ -27,7 +27,7 @@ namespace NHibernate.JetDriver.Tests
                                "table.ValidFrom as validFrom, "        +
                                "table.ValidTo as validTo, "            + 
                                "table.StatusId as status "             + 
-                               "from AssignUnitToStatus table where table.OrganizationalUnitId=?";
+                               "from AssignUnitToStatus table where table.OrganizationalUnitId=@p0";
 
             var transformed = GetTransformedSql(query);
 

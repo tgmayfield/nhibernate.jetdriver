@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Reflection;
-using NHibernate.ByteCode.Castle;
 using NHibernate.Cfg;
 using NHibernate.Connection;
 using NHibernate.Engine;
@@ -30,7 +29,6 @@ namespace NHibernate.JetDriver.Tests
         protected JetTestBase(bool autoCreateTables)
         {
             configuration = new Configuration()
-                .SetProperty(Environment.ProxyFactoryFactoryClass, typeof(ProxyFactoryFactory).AssemblyQualifiedName)
                 .SetProperty(Environment.Dialect, typeof(JetDialect).AssemblyQualifiedName)
                 .SetProperty(Environment.ConnectionDriver, typeof(JetDriver).AssemblyQualifiedName)
                 .SetProperty(Environment.ConnectionProvider, typeof(DriverConnectionProvider).FullName)

@@ -187,7 +187,7 @@ namespace NHibernate.JetDriver
             get { return false; }
         }
 
-        public override SqlString GetLimitString(SqlString querySqlString, int offset, int limit)
+        public override SqlString GetLimitString(SqlString querySqlString, SqlString offset, SqlString limit)
         {
             throw new NotSupportedException("SQL Server does not support an offset");
         }
