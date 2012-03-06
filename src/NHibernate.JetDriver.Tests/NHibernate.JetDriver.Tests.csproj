@@ -80,6 +80,12 @@
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\ProductType.cs" />
     <Compile Include="Entities\ReportDTO.cs" />
+    <Compile Include="ExtraLazy\Document.cs" />
+    <Compile Include="ExtraLazy\ExtraLazyFixture.cs" />
+    <Compile Include="ExtraLazy\Group.cs" />
+    <Compile Include="ExtraLazy\Photo.cs" />
+    <Compile Include="ExtraLazy\SessionAttribute.cs" />
+    <Compile Include="ExtraLazy\User.cs" />
     <Compile Include="JetCommandFixture.cs" />
     <Compile Include="JetCriteriaFixture.cs" />
     <Compile Include="JetDialectFixture.cs" />
@@ -104,6 +110,7 @@
     <EmbeddedResource Include="Entities\Product.hbm.xml" />
     <EmbeddedResource Include="Entities\ProductType.hbm.xml" />
     <EmbeddedResource Include="Entities\ReportDTO.hbm.xml" />
+    <EmbeddedResource Include="ExtraLazy\UserGroup.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="JetTests.db">

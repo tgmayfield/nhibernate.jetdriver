@@ -1,9 +1,10 @@
 using System;
 using System.Data;
-
+using System.Data.Common;
 using NHibernate.Dialect.Function;
+using NHibernate.Dialect.Schema;
+using NHibernate.JetDriver.Schema;
 using NHibernate.SqlCommand;
-
 using Environment = NHibernate.Cfg.Environment;
 
 namespace NHibernate.JetDriver
@@ -13,11 +14,7 @@ namespace NHibernate.JetDriver
     /// </summary>
     public class JetDialect : Dialect.Dialect
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public JetDialect()
-            : base()
         {
             //BINARY 1 byte per character Any type of data may be stored in a field of this type. No translation of the data (for example, to text) is made. How the data is input in a binary field dictates how it will appear as output. 
             //BIT 1 byte Yes and No values and fields that contain only one of two values. 
@@ -43,10 +40,8 @@ namespace NHibernate.JetDriver
             RegisterColumnType(DbType.AnsiStringFixedLength, 255, "CHAR($l)");
             RegisterColumnType(DbType.AnsiString, "TEXT(255)");
             RegisterColumnType(DbType.AnsiString, 255, "TEXT($l)");
-            //RegisterColumnType(DbType.AnsiString, 1073741823, "MEMO");
             RegisterColumnType(DbType.AnsiString, 1073741823, "MEMO");
             RegisterColumnType(DbType.Binary, "IMAGE");
-            //RegisterColumnType( DbType.Binary, 8000, "VARBINARY($i)" );
             RegisterColumnType(DbType.Binary, 2147483647, "IMAGE");
             RegisterColumnType(DbType.Boolean, "BIT");
             RegisterColumnType(DbType.Byte, "BYTE");
@@ -63,7 +58,7 @@ namespace NHibernate.JetDriver
             RegisterColumnType(DbType.Decimal, "DECIMAL(19,5)");
             RegisterColumnType(DbType.Decimal, 19, "DECIMAL(19, $l)");
             RegisterColumnType(DbType.Double, "FLOAT");
-            RegisterColumnType(DbType.Guid, "GUID");
+            RegisterColumnType(DbType.Guid, "UNIQUEIDENTIFIER");
             RegisterColumnType(DbType.Int16, "SMALLINT");
             RegisterColumnType(DbType.Int32, "INT");
             RegisterColumnType(DbType.Int64, "REAL");
@@ -74,11 +69,24 @@ namespace NHibernate.JetDriver
             RegisterColumnType(DbType.String, "TEXT(255)");
             RegisterColumnType(DbType.String, 255, "TEXT($l)");
             RegisterColumnType(DbType.String, 1073741823, "MEMO");
-            //RegisterColumnType(DbType.String, 1073741823, "MEMO");
             RegisterColumnType(DbType.Time, "DATETIME");
 
             RegisterFunction("upper", new StandardSQLFunction("ucase"));
             RegisterFunction("lower", new StandardSQLFunction("lcase"));
+            RegisterFunction("concat", new VarArgsSQLFunction(NHibernateUtil.String, "(", "+", ")"));
+            RegisterFunction("length", new StandardSQLFunction("len", NHibernateUtil.Int32));
+            RegisterFunction("substring", new SQLFunctionTemplate(NHibernateUtil.String, "mid(?1, ?2+1, ?3)"));
+            RegisterFunction("cast", new JetCastFunction());
+            RegisterFunction("date", new SQLFunctionTemplate(NHibernateUtil.Date, "dateadd('d', 0, datediff('d', 0, ?1))"));
+            RegisterFunction("coalesce", new JetCoalesceFunction());
+            RegisterFunction("current_timestamp", new SQLFunctionTemplate(NHibernateUtil.DateTime, "Now"));
+            RegisterFunction("sqrt", new SQLFunctionTemplate(NHibernateUtil.Double, "Sqr(?1)"));
+            RegisterFunction("mod", new SQLFunctionTemplate(NHibernateUtil.Int32, "(?1 Mod ?2)"));
+            RegisterFunction("nullif", new JetNullIfFunction());
+
+            RegisterKeyword("Value");
+            RegisterKeyword("Output");
+            RegisterKeyword("Password");
 
             //although theoretically Access should support outer joins, it has some severe 
             //limitations on complexity of the SQL statements, so we better switch it off.
@@ -187,6 +195,19 @@ namespace NHibernate.JetDriver
             get { return false; }
         }
 
+        /// <summary> The SQL literal value to which this database maps boolean values. </summary>
+        /// <param name="value">The boolean value </param>
+        /// <returns> The appropriate SQL literal. </returns>
+        public override string ToBooleanValueString(bool value)
+        {
+            return value ? "-1" : "0";
+        }
+
+        public override bool UseMaxForLimit
+        {
+            get { return true; }
+        }
+
         public override SqlString GetLimitString(SqlString queryString, SqlString offset, SqlString limit)
         {
             if (offset != null && offset.Length != 0)
@@ -246,6 +267,12 @@ namespace NHibernate.JetDriver
             }
 
             return quoted.Replace(new string(CloseQuote, 2), CloseQuote.ToString());
+        }
+
+        public override IDataBaseSchema GetDataBaseSchema(DbConnection connection)
+        {
+            var jetConnection = (JetDbConnection)connection;
+            return new JetDataBaseSchema(jetConnection.Connection);
         }
 
         public override JoinFragment CreateOuterJoinFragment()

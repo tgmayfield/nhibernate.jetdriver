@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+
+using NHibernate.SqlTypes;
+
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
@@ -29,7 +32,7 @@ namespace NHibernate.JetDriver.Tests
                                "table.StatusId as status "             + 
                                "from AssignUnitToStatus table where table.OrganizationalUnitId=@p0";
 
-            var transformed = GetTransformedSql(query);
+            var transformed = GetTransformedSql(query, new StringSqlType());
 
             Assert.That(query, Is.EqualTo(transformed));
         }
