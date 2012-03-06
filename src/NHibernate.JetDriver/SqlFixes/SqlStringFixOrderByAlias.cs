@@ -29,7 +29,7 @@ namespace NHibernate.JetDriver.SqlFixes
         ///  
         ///
         /// </summary>
-        public static Regex _Regex = new Regex(
+        public static readonly Regex Regex = new Regex(
               "y(\\d+)_ (asc|desc)",
             RegexOptions.IgnoreCase
             | RegexOptions.Singleline
@@ -39,18 +39,15 @@ namespace NHibernate.JetDriver.SqlFixes
         public override string FixSql(string sql)
         {
 
-            if (!_Regex.IsMatch(sql))
+            if (!Regex.IsMatch(sql))
             {
                 return sql;
             }
 
-            var matches = _Regex.Matches(sql);
-
-            string sqlOrderByParameter;
+            var matches = Regex.Matches(sql);
 
             foreach (Match match in matches)
             {
-                sqlOrderByParameter = match.Value;
                 var paramNumber = match.Groups[1].Value;
                 var paramAscDesc = match.Groups[2].Value;
                 sql = sql.Replace(match.Value, (Convert.ToInt32(paramNumber) + 1).ToString() + " " + paramAscDesc);

@@ -57,8 +57,8 @@ namespace NHibernate.JetDriver.SqlFixes
         /// <returns>position of the token or -1 if token not found.</returns>
         protected int Position(string token, int start, List<object> partList)
         {
-            int position = -1;
-            position = Position(new string[] { token }, start, partList);
+            int position;
+            position = Position(new[] { token }, start, partList);
             return position;
         }
 
@@ -70,14 +70,12 @@ namespace NHibernate.JetDriver.SqlFixes
         protected int Position(string[] tokens, int start, List<object> partList)
         {
             int position = -1;
-            int index = 0;
-            bool tokenFound = false;
             for (int i = start; i < partList.Count; i++)
             {
-                tokenFound = true;
+                bool tokenFound = true;
                 for (int j = 0; j < tokens.Length; j++)
                 {
-                    index = i + j;
+                    int index = i + j;
 
                     if (index >= partList.Count)
                     {

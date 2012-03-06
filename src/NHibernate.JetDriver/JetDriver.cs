@@ -78,7 +78,6 @@ namespace NHibernate.JetDriver
             }
 
 
-            SqlString final = sqlString;
             var sqlFixed = sql;
 
             if (_sqlFixes.Length > 0)
@@ -91,22 +90,21 @@ namespace NHibernate.JetDriver
 
             }
 
-            final = RestoreParameters(parametersOriginal, sqlFixed);
+            SqlString final = RestoreParameters(parametersOriginal, sqlFixed);
 
             var fromParts = ExtractFromParts(final);
 
             foreach (var ansiJoinWithEndMarker in fromParts)
             {
-                var ansiFrom = ansiJoinWithEndMarker.Replace(JetJoinFragment.ENDJOIN, "");
+                var ansiFrom = ansiJoinWithEndMarker.Replace(JetJoinFragment.EndJoin, "");
 
                 var sb = new SqlStringBuilder();
-                string accessFrom;
-                
+
                 //convert ansi from to access from
                 sb.Add("SELECT *" + ansiFrom);
                 var sqlJetFrom = FinalizeJoins(sb.ToSqlString());
                 sqlJetFrom = sqlJetFrom.Replace("SELECT *", "");
-                accessFrom = sqlJetFrom.ToString();
+                string accessFrom = sqlJetFrom.ToString();
 
                 var start = final.IndexOfCaseInsensitive(ansiJoinWithEndMarker);
                 sb = new SqlStringBuilder();
@@ -144,7 +142,7 @@ namespace NHibernate.JetDriver
                     i++;
                 }
 
-                while ((i < joinTags.Count) && (joinTags[i].Name == JetJoinFragment.ENDJOIN))
+                while ((i < joinTags.Count) && (joinTags[i].Name == JetJoinFragment.EndJoin))
                 {
                     fromEnd = joinTags[i].Position;
                     i++;
@@ -152,7 +150,7 @@ namespace NHibernate.JetDriver
 
                 if ((fromStart >= 0) && (fromEnd > fromStart))
                 {
-                    parts.Add(sql.Substring(fromStart, fromEnd + JetJoinFragment.ENDJOIN.Length - fromStart));
+                    parts.Add(sql.Substring(fromStart, fromEnd + JetJoinFragment.EndJoin.Length - fromStart));
                 }
 
             }
@@ -166,7 +164,7 @@ namespace NHibernate.JetDriver
 
 
             var joinTags = JoinTags(sql, FromClause);
-            joinTags.AddRange(JoinTags(sql, JetJoinFragment.ENDJOIN));
+            joinTags.AddRange(JoinTags(sql, JetJoinFragment.EndJoin));
 
             var q = from joinTag in joinTags
                     orderby joinTag.Position
@@ -219,8 +217,17 @@ namespace NHibernate.JetDriver
                 if (i > 0)
                 {
                     var paramPos = matches[i - 1].Value.Replace("@p", "");
-                    var param = parametersOriginal.Where(p => p.ParameterPosition == Convert.ToInt32(paramPos)).First();
-                    sqlBuilder.AddObject(param);
+                    var param = parametersOriginal.FirstOrDefault(p => p.ParameterPosition == Convert.ToInt32(paramPos));
+
+                    if (param == null)
+                    {
+                        logger.WarnFormat("No parameter found to match position {0}. Using @p{0}", paramPos);
+                        sqlBuilder.Add(string.Format("@p{0}", paramPos));
+                    }
+                    else
+                    {
+                        sqlBuilder.AddObject(param);
+                    }
                 }
 
                 sqlBuilder.Add(parts[i]);
@@ -276,9 +283,8 @@ namespace NHibernate.JetDriver
 
             if ((parametersParts.Length - 1) != parametersOriginal.Count)
             {
-                //can´t restore 
-                var msg = "FinalizeJoins JetDriver removed SQL parameteres and can not be restored";
-                throw new QueryException(msg);
+                //can't restore 
+                throw new QueryException("FinalizeJoins JetDriver removed SQL parameteres and can not be restored");
             }
 
             var sqlBuilder = new SqlStringBuilder();

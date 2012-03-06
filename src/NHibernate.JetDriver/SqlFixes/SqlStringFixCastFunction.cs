@@ -29,7 +29,7 @@ namespace NHibernate.JetDriver.SqlFixes
         ///  
         ///
         /// </summary>
-        public static Regex _regexLocate = new Regex(
+        public static readonly Regex RegexLocate = new Regex(
               "cast\\s*\\((.*?)\\s+as\\s+.*?\\)",
             RegexOptions.IgnoreCase
             | RegexOptions.Singleline
@@ -40,19 +40,16 @@ namespace NHibernate.JetDriver.SqlFixes
         public override string FixSql(string sql)
         {
 
-            if (!_regexLocate.IsMatch(sql))
+            if (!RegexLocate.IsMatch(sql))
             {
 
                 return sql;
             }
 
-            var matches = _regexLocate.Matches(sql);
-
-            string sqlCast;
+            var matches = RegexLocate.Matches(sql);
 
             foreach (Match match in matches)
             {
-                sqlCast = match.Value;
                 var expressionToCast = match.Groups[1].Value;
                 sql = sql.Replace(match.Value, "(" + expressionToCast + ")");
             }

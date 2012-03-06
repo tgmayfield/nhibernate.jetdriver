@@ -30,7 +30,7 @@ namespace NHibernate.JetDriver.SqlFixes
         ///  
         ///
         /// </summary>
-        private static Regex _regexDistinct = new Regex(
+        private static readonly Regex RegexDistinct = new Regex(
              "(COUNT|SUM|AVG)\\s*\\(\\s*(DISTINCT)",
            RegexOptions.IgnoreCase
            | RegexOptions.Singleline
@@ -43,20 +43,18 @@ namespace NHibernate.JetDriver.SqlFixes
             return sql;
 #endif
 
-            if (!_regexDistinct.IsMatch(sql))
+            if (!RegexDistinct.IsMatch(sql))
             {
                 return sql;
             }
 
             Console.WriteLine("*****************COUNT(DISTICT******* ERROR");
 
-            var matches = _regexDistinct.Matches(sql);
-
-            string sqlRemoveDistinct;
+            var matches = RegexDistinct.Matches(sql);
 
             foreach (Match match in matches)
             {
-                sqlRemoveDistinct = match.Value;
+                string sqlRemoveDistinct = match.Value;
                 sqlRemoveDistinct = sqlRemoveDistinct.ToLower().Replace("distinct", "");
                 sql = sql.Replace(match.Value, sqlRemoveDistinct);
             }

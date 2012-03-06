@@ -32,7 +32,7 @@ namespace NHibernate.JetDriver
                 var buffer = base.ToFromFragmentString;
                 if (buffer.Count > 0)
                 {
-                    buffer = buffer.Append(ENDJOIN);
+                    buffer = buffer.Append(EndJoin);
                 }
 
                 return buffer;
@@ -40,6 +40,6 @@ namespace NHibernate.JetDriver
             }
         }
 
-        public const string ENDJOIN = "/*endjoin*/";
+        public const string EndJoin = "/*endjoin*/";
     }
 }

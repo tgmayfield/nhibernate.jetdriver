@@ -11,7 +11,7 @@ namespace NHibernate.JetDriver.SqlFixes
     /// </remarks>
     public class SqlStringFixLocateFunction : SqlStringFix
     {
-        private static Regex _regexLocate = new Regex(
+        private static readonly Regex RegexLocate = new Regex(
                  "locate\\s*\\((.+?)\\)",
              RegexOptions.IgnoreCase
              | RegexOptions.Singleline
@@ -20,22 +20,18 @@ namespace NHibernate.JetDriver.SqlFixes
 
         public override string FixSql(string sql)
         {
-            if (!_regexLocate.IsMatch(sql))
+            if (!RegexLocate.IsMatch(sql))
             {
                 return sql;
             }
 
-            var matches = _regexLocate.Matches(sql);
-
-            string sqlLocate;
-            string sqlInstr;
+            var matches = RegexLocate.Matches(sql);
 
             foreach (Match match in matches)
             {
-                sqlLocate = match.Value;
                 var paramExp = match.Groups[1].Value;
                 var args = paramExp.Split(',');
-                sqlInstr = "( instr(" + args[2] + "+1," + args[1] + "," + args[0] + ")-1 ) ";
+                string sqlInstr = "( instr(" + args[2] + "+1," + args[1] + "," + args[0] + ")-1 ) ";
                 sql = sql.Replace(match.Value, sqlInstr);
             }
 

@@ -9,7 +9,7 @@ namespace NHibernate.JetDriver.SqlFixes
     public class SqlStringFixExtract : SqlStringFix
     {
 
-        private static string[] _searchPatterns ={
+        private static readonly string[] SearchPatterns ={
                                "extract\\s*\\(year\\s+from",
                                "extract\\s*\\(month\\s+from",
                                "extract\\s*\\(day\\s+from",
@@ -17,7 +17,7 @@ namespace NHibernate.JetDriver.SqlFixes
                                "extract\\s*\\(minute\\s+from",
                                "extract\\s*\\(second\\s+from"
                                          };
-        private static string[] _searchReplacements ={
+        private static readonly string[] SearchReplacements ={
                                " year(",
                                " month(",
                                "day(",
@@ -25,7 +25,7 @@ namespace NHibernate.JetDriver.SqlFixes
                                "minute(",
                                "second("
                                          };
-        private static Regex[] _regExpressions = null;
+        private static Regex[] _regExpressions;
 
 
         public override string FixSql(string sql)
@@ -33,11 +33,11 @@ namespace NHibernate.JetDriver.SqlFixes
 
             if (_regExpressions == null)
             {
-                _regExpressions = new Regex[_searchPatterns.Length];
+                _regExpressions = new Regex[SearchPatterns.Length];
 
-                for (int i = 0; i < _searchPatterns.Length; i++)
+                for (int i = 0; i < SearchPatterns.Length; i++)
                 {
-                    _regExpressions[i] = new Regex(_searchPatterns[i],
+                    _regExpressions[i] = new Regex(SearchPatterns[i],
                     RegexOptions.IgnoreCase
                     | RegexOptions.Singleline
                     | RegexOptions.CultureInvariant
@@ -48,9 +48,9 @@ namespace NHibernate.JetDriver.SqlFixes
 
             for (int i = 0; i < _regExpressions.Length; i++)
             {
-                if (_regExpressions[i].IsMatch((string)sql))
+                if (_regExpressions[i].IsMatch(sql))
                 {
-                    sql = _regExpressions[i].Replace(sql, _searchReplacements[i]);
+                    sql = _regExpressions[i].Replace(sql, SearchReplacements[i]);
                 }
 
             }

@@ -10,7 +10,7 @@ namespace NHibernate.JetDriver.SqlFixes
     public class SqlStringFixCaseWhen : SqlStringFix
     {
 
-        private static Regex _regexCaseWhen = new Regex(
+        private static readonly Regex RegexCaseWhen = new Regex(
                   "case[^\\w](.*?)[^\\w]end",
                 RegexOptions.IgnoreCase
                 | RegexOptions.Singleline
@@ -20,12 +20,12 @@ namespace NHibernate.JetDriver.SqlFixes
         public override string FixSql(string sql)
         {
 
-            if (!_regexCaseWhen.IsMatch(sql))
+            if (!RegexCaseWhen.IsMatch(sql))
             {
                 return sql;
             }
 
-            var matches = _regexCaseWhen.Matches(sql);
+            var matches = RegexCaseWhen.Matches(sql);
 
             foreach (Match match in matches)
             {

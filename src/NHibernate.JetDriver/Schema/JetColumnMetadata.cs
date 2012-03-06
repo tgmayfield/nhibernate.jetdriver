@@ -10,9 +10,8 @@ namespace NHibernate.JetDriver.Schema
             : base(rs)
         {
             Name = Convert.ToString(rs["COLUMN_NAME"]);
-            object aValue;
 
-            aValue = rs["CHARACTER_MAXIMUM_LENGTH"];
+            object aValue = rs["CHARACTER_MAXIMUM_LENGTH"];
             if (aValue != DBNull.Value)
                 ColumnSize = Convert.ToInt32(aValue);
 

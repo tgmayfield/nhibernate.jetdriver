@@ -8,7 +8,7 @@ namespace NHibernate.JetDriver.SqlFixes
     ///  </summary>
     public class SqlStringFixUpperLowerFunction : SqlStringFix
     {
-        private static Regex _regexLocate = new Regex(
+        private static readonly Regex RegexLocate = new Regex(
             "(upper|lower)\\s*\\((.+?)\\)",
             RegexOptions.IgnoreCase
                 | RegexOptions.Singleline
@@ -17,12 +17,12 @@ namespace NHibernate.JetDriver.SqlFixes
 
         public override string FixSql(string sql)
         {
-            if (!_regexLocate.IsMatch(sql))
+            if (!RegexLocate.IsMatch(sql))
             {
                 return sql;
             }
 
-            var matches = _regexLocate.Matches(sql);
+            var matches = RegexLocate.Matches(sql);
 
             foreach (Match match in matches)
             {

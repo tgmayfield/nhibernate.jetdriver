@@ -35,31 +35,31 @@ namespace NHibernate.JetDriver
 
         static JetCastFunction()
         {
-            _JetConversionFunctions.Add("TINYINT", "CByte");
-            _JetConversionFunctions.Add("MONEY", "CCur");
-            _JetConversionFunctions.Add("DATETIME", "CDate");
-            _JetConversionFunctions.Add("DECIMAL", "CDec");
-            _JetConversionFunctions.Add("REAL", "CSng");
-            _JetConversionFunctions.Add("FLOAT", "CDbl");
-            _JetConversionFunctions.Add("SMALLINT", "CInt");
-            _JetConversionFunctions.Add("INTEGER", "CLng");
-            _JetConversionFunctions.Add("INT", "CLng");
-            _JetConversionFunctions.Add("LONG", "CLng");
+            JetConversionFunctions.Add("TINYINT", "CByte");
+            JetConversionFunctions.Add("MONEY", "CCur");
+            JetConversionFunctions.Add("DATETIME", "CDate");
+            JetConversionFunctions.Add("DECIMAL", "CDec");
+            JetConversionFunctions.Add("REAL", "CSng");
+            JetConversionFunctions.Add("FLOAT", "CDbl");
+            JetConversionFunctions.Add("SMALLINT", "CInt");
+            JetConversionFunctions.Add("INTEGER", "CLng");
+            JetConversionFunctions.Add("INT", "CLng");
+            JetConversionFunctions.Add("LONG", "CLng");
 
         }
 
-        private static Hashtable _JetConversionFunctions = new Hashtable();
+        private static readonly Hashtable JetConversionFunctions = new Hashtable();
 
-        private SqlString GetJetConvertionFunction(NHibernate.Dialect.Dialect dialect, string sqlType, object arg)
+        private SqlString GetJetConvertionFunction(Dialect.Dialect dialect, string sqlType, object arg)
         {
             sqlType = sqlType.ToUpper();
             var sb = new SqlStringBuilder();
 
 
 
-            if (_JetConversionFunctions.ContainsKey(sqlType))
+            if (JetConversionFunctions.ContainsKey(sqlType))
             {
-                var functionname = _JetConversionFunctions[sqlType];
+                var functionname = JetConversionFunctions[sqlType];
 
                 var sqlArg = arg.ToString();
 

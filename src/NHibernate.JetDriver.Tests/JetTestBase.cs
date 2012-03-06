@@ -21,7 +21,6 @@ namespace NHibernate.JetDriver.Tests
         }
 
         private readonly JetDriver jetDriver = new JetDriver();
-        private readonly SqlType[] dummyParameterTypes = { };
         private readonly Configuration configuration;
         private readonly ISessionFactory factory;
         private readonly ISessionFactoryImplementor factoryImpl;
@@ -110,10 +109,10 @@ namespace NHibernate.JetDriver.Tests
             get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JetTests.db"); }
         }
 
-        protected string GetTransformedSql(string sqlQuery)
+        protected string GetTransformedSql(string sqlQuery, params SqlType[] parameterTypes)
         {
             var sql = SqlString.Parse(sqlQuery);
-            var command = jetDriver.GenerateCommand(CommandType.Text, sql, dummyParameterTypes);
+            var command = jetDriver.GenerateCommand(CommandType.Text, sql, parameterTypes);
 
             return command.CommandText;
         }
