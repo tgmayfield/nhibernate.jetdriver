@@ -53,6 +53,11 @@ namespace NHibernate.JetDriver
             get { return true; }
         }
 
+        public override bool UseNamedPrefixInSql
+        {
+            get { return true; }
+        }
+
         public override string NamedPrefix
         {
             get { return "@"; }
