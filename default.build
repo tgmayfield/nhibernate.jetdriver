@@ -26,6 +26,7 @@
 				<include name="${folders.lib}/Iesi.Collections.dll"/>
 				<include name="${folders.lib}/log4net.dll"/>
 				<include name="${folders.lib}/nunit.framework.dll"/>
+				<include name="${folders.lib}/MacroScope.dll"/>
 				<include name="${folders.src}/NHibernate.JetDriver.Tests/JetTests.db" />
 			</fileset>
 		</copy>
@@ -42,6 +43,7 @@
 			<references>
 				<include name="${folders.lib}/NHibernate.dll"/>
 				<include name="${folders.lib}/log4net.dll"/>
+				<include name="${folders.lib}/MacroScope.dll"/>
 			</references>
 		</csc>
 
@@ -61,6 +63,7 @@
 				<include name="${folders.lib}/Iesi.Collections.dll"/>
 				<include name="${folders.lib}/log4net.dll"/>
 				<include name="${folders.lib}/nunit.framework.dll"/>
+				<include name="${folders.lib}/MacroScope.dll"/>
 				<include name="${folders.build}/NHibernate.JetDriver.dll"/>
 			</references>
 			<resources basedir="src/NHibernate.JetDriver.Tests" prefix="NHibernate.JetDriver.Tests" dynamicprefix="true">
