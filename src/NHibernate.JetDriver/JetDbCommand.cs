@@ -106,6 +106,9 @@ namespace NHibernate.JetDriver
 
         private void FixStringValue(IDataParameter p)
         {
+            if (p.Value == DBNull.Value)
+                return;
+
             if (!_convertedDateParameters.Contains(p))
                 return;
 
