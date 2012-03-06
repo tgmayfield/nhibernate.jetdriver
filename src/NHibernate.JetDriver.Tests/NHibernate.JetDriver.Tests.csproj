@@ -81,9 +81,11 @@
     <Compile Include="Entities\ProductType.cs" />
     <Compile Include="Entities\ReportDTO.cs" />
     <Compile Include="JetCommandFixture.cs" />
+    <Compile Include="JetCriteriaFixture.cs" />
     <Compile Include="JetDialectFixture.cs" />
     <Compile Include="JetDriverFixture.cs" />
     <Compile Include="JetHQLFixture.cs" />
+    <Compile Include="JetLinqFixture.cs" />
     <Compile Include="JetOrderByFixture.cs" />
     <Compile Include="JetTestBase.cs" />
     <Compile Include="Entities\NHCD37.cs" />

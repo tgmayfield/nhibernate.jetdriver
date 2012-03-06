@@ -144,5 +144,17 @@ namespace NHibernate.JetDriver.Tests
                 Assert.That(count, Is.EqualTo(0));
             }
         }
+
+        [Test]
+        public void can_limit()
+        {
+            using (var s = SessionFactory.OpenSession())
+            {
+                var query = s.CreateQuery("from Catalog c")
+                    .SetMaxResults(3);
+
+                query.List();
+            }
+        }
     }
 }

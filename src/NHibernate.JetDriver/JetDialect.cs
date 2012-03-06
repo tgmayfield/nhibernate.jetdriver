@@ -168,7 +168,7 @@ namespace NHibernate.JetDriver
         /// <value>False.</value>
         public override bool SupportsLimit
         {
-            get { return false; }
+            get { return true; }
         }
 
         /// <summary>
@@ -187,9 +187,36 @@ namespace NHibernate.JetDriver
             get { return false; }
         }
 
-        public override SqlString GetLimitString(SqlString querySqlString, SqlString offset, SqlString limit)
+        public override SqlString GetLimitString(SqlString queryString, SqlString offset, SqlString limit)
         {
-            throw new NotSupportedException("SQL Server does not support an offset");
+            if (offset != null && offset.Length != 0)
+                throw new NotSupportedException("Jet Engine 4.0 does not support an offset");
+
+            int insertIndex = GetAfterSelectInsertPoint(queryString);
+
+            var limitFragment = new SqlStringBuilder();
+
+            if (limit != null && limit.Length != 0)
+            {
+                limitFragment.Add(" TOP ");
+                limitFragment.Add(limit);
+            }
+
+            return queryString.Insert(insertIndex, limitFragment.ToSqlString());
+        }
+
+        private static int GetAfterSelectInsertPoint(SqlString sql)
+        {
+            // Assume no common table expressions with the statement.
+            if (sql.StartsWithCaseInsensitive("select distinct"))
+            {
+                return 15;
+            }
+            if (sql.StartsWithCaseInsensitive("select"))
+            {
+                return 6;
+            }
+            return 0;
         }
 
         /// <summary>
