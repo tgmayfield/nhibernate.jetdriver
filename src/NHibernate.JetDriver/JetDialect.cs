@@ -1,9 +1,10 @@
 using System;
 using System.Data;
-
+using System.Data.Common;
 using NHibernate.Dialect.Function;
+using NHibernate.Dialect.Schema;
+using NHibernate.JetDriver.Schema;
 using NHibernate.SqlCommand;
-
 using Environment = NHibernate.Cfg.Environment;
 
 namespace NHibernate.JetDriver
@@ -284,6 +285,12 @@ namespace NHibernate.JetDriver
             }
 
             return quoted.Replace(new string(CloseQuote, 2), CloseQuote.ToString());
+        }
+
+        public override IDataBaseSchema GetDataBaseSchema(DbConnection connection)
+        {
+            var jetConnection = (JetDbConnection)connection;
+            return new JetDataBaseSchema(jetConnection.Connection);
         }
 
         public override JoinFragment CreateOuterJoinFragment()
