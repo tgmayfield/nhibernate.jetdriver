@@ -5,9 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using NHibernate.Driver;
-using NHibernate.Hql.Ast.ANTLR.Tree;
 using NHibernate.JetDriver.SqlFixes;
 using NHibernate.SqlCommand;
 using NHibernate.SqlTypes;
@@ -28,12 +26,15 @@ namespace NHibernate.JetDriver
         private const string WhereClause = " where ";
         private const string OrderByClause = " order by ";
 
-        private SqlStringFix[] _sqlFixes ={new SqlStringFixExtract(),
-                                            new SqlStringFixCaseWhen(),
-                                            new SqlStringFixLocateFunction(),
-                                            new SqlStringFixAggregateDistinct(),
-                                            new SqlStringFixCastFunction(),
-                                            new SqlStringFixOrderByAlias()};
+        private readonly SqlStringFix[] _sqlFixes = {
+            new SqlStringFixExtract(),
+            new SqlStringFixCaseWhen(),
+            new SqlStringFixLocateFunction(),
+            new SqlStringFixAggregateDistinct(),
+            new SqlStringFixCastFunction(),
+            new SqlStringFixOrderByAlias(),
+            new SqlStringFixUpperLowerFunction(),
+        };
 
         private readonly IDictionary _queryCache = new Hashtable();
 

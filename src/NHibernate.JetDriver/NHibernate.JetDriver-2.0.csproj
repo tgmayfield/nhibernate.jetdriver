@@ -159,6 +159,7 @@
     <Compile Include="SqlFixes\SqlStringFixExtract.cs" />
     <Compile Include="SqlFixes\SqlStringFixLocateFunction.cs" />
     <Compile Include="SqlFixes\SqlStringFix.cs" />
+    <Compile Include="SqlFixes\SqlStringFixUpperLowerFunction.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
