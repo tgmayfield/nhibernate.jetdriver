@@ -40,6 +40,17 @@ namespace NHibernate.JetDriver.Tests
         }
 
         [Test]
+        [Ignore]
+        public void can_count()
+        {
+            using (var sesison = SessionFactory.OpenSession())
+            {
+                var query = sesison.Query<Foo>();
+                query.Count();
+            }
+        }
+
+        [Test]
         public void can_issue_FirstOrDefault()
         {
             using (var session = SessionFactory.OpenSession())
