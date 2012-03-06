@@ -31,7 +31,9 @@ namespace NHibernate.JetDriver
         private SqlStringFix[] _sqlFixes ={new SqlStringFixExtract(),
                                             new SqlStringFixCaseWhen(),
                                             new SqlStringFixLocateFunction(),
-                                            new SqlStringFixAggregateDistinct()};
+                                            new SqlStringFixAggregateDistinct(),
+                                            new SqlStringFixCastFunction(),
+                                            new SqlStringFixOrderByAlias()};
 
         private readonly IDictionary _queryCache = new Hashtable();
 

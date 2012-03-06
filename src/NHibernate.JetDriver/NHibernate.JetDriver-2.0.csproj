@@ -152,6 +152,8 @@
     <Compile Include="Schema\JetIndexMetadata.cs" />
     <Compile Include="Schema\JetTableMetadata.cs" />
     <Compile Include="Schema\JetDataBaseSchema.cs" />
+    <Compile Include="SqlFixes\SqlStringFixCastFunction.cs" />
+    <Compile Include="SqlFixes\SqlStringFixOrderByAlias.cs" />
     <Compile Include="SqlFixes\SqlStringFixAggregateDistinct.cs" />
     <Compile Include="SqlFixes\SqlStringFixCaseWhen.cs" />
     <Compile Include="SqlFixes\SqlStringFixExtract.cs" />
