@@ -40,7 +40,6 @@ namespace NHibernate.JetDriver.Tests
         }
 
         [Test]
-        [Ignore]
         public void can_count()
         {
             using (var sesison = SessionFactory.OpenSession())
@@ -59,6 +58,21 @@ namespace NHibernate.JetDriver.Tests
                     .Where(f => f.Description == "invalid");
 
                 query.FirstOrDefault();
+            }
+        }
+
+        [Test]
+        public void can_call_ToUpper_and_ToLower()
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                var query = session.Query<Foo>()
+                    .Select(f => new
+                    {
+                        Test = f.Description.ToUpper(),
+                        Test2 = f.Description.ToLower(),
+                    });
+                query.SingleOrDefault();
             }
         }
     }

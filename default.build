@@ -67,7 +67,7 @@
 				<include name="${folders.build}/NHibernate.JetDriver.dll"/>
 			</references>
 			<resources basedir="src/NHibernate.JetDriver.Tests" prefix="NHibernate.JetDriver.Tests" dynamicprefix="true">
-				<include name="**/Entities/*.hbm.xml"/>
+				<include name="**/*.hbm.xml"/>
 				<exclude name="**/bin/**/*.hbm.xml"/>
 				<exclude name="**/obj/**/*.hbm.xml"/>
 			</resources>
