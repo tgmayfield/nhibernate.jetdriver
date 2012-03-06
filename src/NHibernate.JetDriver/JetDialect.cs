@@ -80,6 +80,31 @@ namespace NHibernate.JetDriver
             RegisterFunction("upper", new StandardSQLFunction("ucase"));
             RegisterFunction("lower", new StandardSQLFunction("lcase"));
 
+            RegisterFunction("concat", new VarArgsSQLFunction(NHibernateUtil.String, "(", "+", ")"));
+            RegisterFunction("length", new StandardSQLFunction("len", NHibernateUtil.Int32));
+            RegisterFunction("substring", new SQLFunctionTemplate(NHibernateUtil.String, "mid(?1, ?2+1, ?3)"));
+            //HQL RegisterFunction("substring", new SQLFunctionTemplate(NHibernateUtil.String, "mid(?1, ?2, ?3)"));
+            //RegisterFunction("locate",new JetLocateFunction());//new SQLFunctionTemplate(NHibernateUtil.Int32, "(instr(?3+1,?2,?1)-1)"));
+            RegisterFunction("cast", new JetCastFunction());
+            //LINQ not calling extract dialect function 
+            //RegisterFunction("extract", new StandardSQLFunction("jetextract", NHibernateUtil.Int32));
+            RegisterFunction("date", new SQLFunctionTemplate(NHibernateUtil.Date, "dateadd('d', 0, datediff('d', 0, ?1))"));
+            RegisterFunction("coalesce", new JetCoalesceFunction());
+            RegisterFunction("current_timestamp", new SQLFunctionTemplate(NHibernateUtil.DateTime, "Now"));
+            RegisterFunction("sqrt", new SQLFunctionTemplate(NHibernateUtil.Double, "Sqr(?1)"));
+            RegisterFunction("mod", new SQLFunctionTemplate(NHibernateUtil.Int32, "(?1 Mod ?2)"));
+            RegisterFunction("nullif", new JetNullIfFunction());
+
+            RegisterColumnType(DbType.Int64, "INT");
+            //RegisterColumnType(DbType.Boolean, "BYTE");
+            RegisterColumnType(DbType.Decimal, "FLOAT");
+            RegisterColumnType(DbType.Decimal, 19, "FLOAT");
+            RegisterColumnType(DbType.Guid, "UNIQUEIDENTIFIER");
+
+            RegisterKeyword("Value");
+            RegisterKeyword("Output");
+            RegisterKeyword("Password");
+
             //although theoretically Access should support outer joins, it has some severe 
             //limitations on complexity of the SQL statements, so we better switch it off.
             DefaultProperties[Environment.MaxFetchDepth] = "0";
@@ -185,6 +210,19 @@ namespace NHibernate.JetDriver
         public override bool SupportsVariableLimit
         {
             get { return false; }
+        }
+
+        /// <summary> The SQL literal value to which this database maps boolean values. </summary>
+        /// <param name="value">The boolean value </param>
+        /// <returns> The appropriate SQL literal. </returns>
+        public override string ToBooleanValueString(bool value)
+        {
+            return value ? "-1" : "0";
+        }
+
+        public override bool UseMaxForLimit
+        {
+            get { return true; }
         }
 
         public override SqlString GetLimitString(SqlString queryString, SqlString offset, SqlString limit)

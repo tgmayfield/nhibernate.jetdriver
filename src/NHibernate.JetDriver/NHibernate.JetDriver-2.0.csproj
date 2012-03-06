@@ -96,6 +96,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\net\3.5\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="MacroScope">
+      <HintPath>..\..\lib\net\3.5\MacroScope.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\net\3.5\NHibernate.dll</HintPath>
@@ -117,6 +120,8 @@
     <Compile Include="JetCaseFragment.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="JetCastFunction.cs" />
+    <Compile Include="JetCoalesceFunction.cs" />
     <Compile Include="JetDbCommand.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -135,6 +140,13 @@
     <Compile Include="JetJoinFragment.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="JetLocateFunction.cs" />
+    <Compile Include="JetNullIfFunction.cs" />
+    <Compile Include="SqlFixes\SqlStringFixAggregateDistinct.cs" />
+    <Compile Include="SqlFixes\SqlStringFixCaseWhen.cs" />
+    <Compile Include="SqlFixes\SqlStringFixExtract.cs" />
+    <Compile Include="SqlFixes\SqlStringFixLocateFunction.cs" />
+    <Compile Include="SqlFixes\SqlStringFix.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

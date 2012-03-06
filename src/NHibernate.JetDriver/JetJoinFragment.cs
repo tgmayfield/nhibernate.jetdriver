@@ -24,5 +24,22 @@ namespace NHibernate.JetDriver
 
             base.AddJoin(tableName, alias, fkColumns, pkColumns, joinType);
         }
+
+        public override SqlString ToFromFragmentString
+        {
+            get
+            {
+                var buffer = base.ToFromFragmentString;
+                if (buffer.Count > 0)
+                {
+                    buffer = buffer.Append(ENDJOIN);
+                }
+
+                return buffer;
+
+            }
+        }
+
+        public const string ENDJOIN = "/*endjoin*/";
     }
 }
