@@ -15,6 +15,11 @@ namespace NHibernate.JetDriver.Tests
 {
     public abstract class JetTestBase
     {
+        static JetTestBase()
+        {
+            TestingLoggingSetup.Configure();
+        }
+
         private readonly JetDriver jetDriver = new JetDriver();
         private readonly SqlType[] dummyParameterTypes = { };
         private readonly Configuration configuration;
