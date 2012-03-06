@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace NHibernate.JetDriver
 {
@@ -67,6 +68,8 @@ namespace NHibernate.JetDriver
         private void CheckParameters()
         {
             if (Command.Parameters.Count == 0) return;
+
+            FixParameterWithSelectTop();
 
             foreach (IDataParameter p in Command.Parameters)
             {
@@ -149,6 +152,50 @@ namespace NHibernate.JetDriver
             Log.DebugFormat("Changing datetime parameter value to [{0}] as string, to avoid DB confusion", normalizedDateValue);
 
             return normalizedDateValue;
+        }
+        
+        /// <summary>
+        ///  Regular expression built for C# on: dom, out 2, 2011, 10:45:17 
+        ///  Using Expresso Version: 3.0.3634, http://www.ultrapico.com
+        ///  
+        ///  A description of the regular expression:
+        ///  
+        ///  top\s+
+        ///      top
+        ///      Whitespace, one or more repetitions
+        ///  [1]: A numbered capture group. [@p[0-9]+]
+        ///      @p[0-9]+
+        ///          @p
+        ///          Any character in this class: [0-9], one or more repetitions
+        ///  
+        ///
+        /// </summary>
+        public static Regex regex = new Regex(
+              "top\\s+(@p[0-9]+)",
+            RegexOptions.IgnoreCase
+            | RegexOptions.Singleline
+            | RegexOptions.CultureInvariant
+            );
+
+
+        private void FixParameterWithSelectTop()
+        {
+            var text = Command.CommandText;
+            if (regex.IsMatch(text))
+            {
+                foreach (Match m in regex.Matches(text))
+                {
+                    var paramName = m.Groups[1].Value;
+                    var param = Command.Parameters[paramName];
+                    var paramValue = param.Value.ToString();
+                    text = text.Replace(m.Value, "top " + paramValue);
+                    Log.DebugFormat("Removed parameter {0} in favor of SELECT TOP <Number>: {1}", paramName, text);
+
+                    Command.Parameters.Remove(param);
+                }
+
+                Command.CommandText = text;
+            }
         }
 
         public override void Cancel()

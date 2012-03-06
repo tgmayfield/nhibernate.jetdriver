@@ -4,6 +4,7 @@ using System.Linq;
 using NHibernate.JetDriver.Tests.Entities;
 using NHibernate.Linq;
 using NUnit.Framework;
+using NUnit.Framework.SyntaxHelpers;
 
 namespace NHibernate.JetDriver.Tests
 {
@@ -11,9 +12,20 @@ namespace NHibernate.JetDriver.Tests
     public class JetLinqFixture
         : JetTestBase
     {
+        private const int InsertCount = 50;
+
         public JetLinqFixture()
             : base(true)
         {
+            using (var session = SessionFactory.OpenSession())
+            using (var tran = session.BeginTransaction())
+            {
+                for (int count = 0; count < InsertCount; count++)
+                {
+                    session.Save(new Foo());
+                }
+                tran.Commit();
+            }
         }
 
         protected override IList<System.Type> EntityTypes
@@ -28,14 +40,15 @@ namespace NHibernate.JetDriver.Tests
         }
 
         [Test]
-        [Ignore]
         public void can_limit()
         {
             using (var session = SessionFactory.OpenSession())
             {
                 var query = session.Query<Foo>()
                     .Take(10);
-                query.ToList();
+                int count = query.ToList().Count;
+
+                Assert.That(count, Is.EqualTo(10));
             }
         }
 
@@ -45,7 +58,9 @@ namespace NHibernate.JetDriver.Tests
             using (var sesison = SessionFactory.OpenSession())
             {
                 var query = sesison.Query<Foo>();
-                query.Count();
+                int count = query.Count();
+
+                Assert.That(count, Is.EqualTo(InsertCount));
             }
         }
 
@@ -72,7 +87,7 @@ namespace NHibernate.JetDriver.Tests
                         Test = f.Description.ToUpper(),
                         Test2 = f.Description.ToLower(),
                     });
-                query.SingleOrDefault();
+                query.ToList();
             }
         }
     }

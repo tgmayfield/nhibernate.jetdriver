@@ -192,7 +192,7 @@ namespace NHibernate.JetDriver
         /// </summary>
         public override bool SupportsVariableLimit
         {
-            get { return false; }
+            get { return true; }
         }
 
         /// <summary> The SQL literal value to which this database maps boolean values. </summary>
