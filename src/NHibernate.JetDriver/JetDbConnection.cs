@@ -90,6 +90,21 @@ namespace NHibernate.JetDriver
             get { return Connection.ConnectionTimeout; }
         }
 
+        public override DataTable GetSchema()
+        {
+	        return Connection.GetSchema();
+        }
+
+        public override DataTable GetSchema(string collectionName)
+        {
+	        return Connection.GetSchema(collectionName);
+        }
+
+        public override DataTable GetSchema(string collectionName, string[] restrictionValues)
+        {
+	        return Connection.GetSchema(collectionName, restrictionValues);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
